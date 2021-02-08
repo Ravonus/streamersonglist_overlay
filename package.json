@@ -1,0 +1,25 @@
+{
+  "name": "emily",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/puppeteer": "^5.4.3",
+    "axios": "^0.21.1",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "last-fm": "^5.3.0",
+    "puppeteer": "^7.0.1",
+    "socket.io": "^3.1.1",
+    "twitch": "^4.4.9",
+    "twitch-auth": "^4.4.9"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.11"
+  }
+}

@@ -1,0 +1,150 @@
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/blueAnimatedBorder.css" />
+
+</head>
+
+<body>
+
+    <div id="app">
+
+        <div v-for="(song, i) in songs" :key="song.Position">
+            <div v-if="i === '0'" :class="`box bg-${song.inactive ? 'danger':colors[Math.floor(Math.random() * 5) ]}`">
+                <span></span>
+                <span style="left: 76px;"></span>
+                <span></span>
+                <span style="left: -76px;"></span>
+
+                <div class="toast-header">
+                    <img :src="song.logo" style="height: 75px; width: 75px;" class="rounded me-2" alt="img">
+                    <strong class="me-auto">{{song.Title}}</strong>
+                    <small class="text-muted">{{song.Artist}}</small>
+
+                </div>
+                <div class="toast-body">
+                    <div class="row">
+                        <h3>
+                            {{song["Requested By"]}}
+                        </h3>
+                        <h4 v-if="song.Amount !== '$0'"> {{song.Amount}} </h4>
+                    </div>
+                </div>
+
+            </div>
+
+            <div v-else
+                :class="`toast mx-2 px-2 py-2 my-2 bg-${song.inactive ? 'danger' : colors[Math.floor(Math.random() * 5) ]}`"
+                role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <img :src="song.logo" style="height: 75px; width: 75px;" class="rounded me-2" alt="img">
+                    <strong class="me-auto">{{song.Title}}</strong>
+                    <small class="text-muted">{{song.Artist}}</small>
+
+                </div>
+                <div class="toast-body">
+                    <div class="row">
+                        <h3>
+                            {{song["Requested By"]}}
+                        </h3>
+                        <h4 v-if="song.Amount !== '$0'"> {{song.Amount}} </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+<script>
+    const socket = io();
+
+    socket.on("connect", () => {
+        console.log(socket.id);
+    });
+
+
+    socket.on("list", async (data) => {
+
+
+        const keys = Object.keys(data);
+        const newObj = {}
+        await app.asyncForEach(keys, async (key, i) => {
+            const doc = data[key];
+
+            if (i < (app.maxSongList || 99)) {
+                console.log(i, app.maxSongList)
+
+                newObj[key] = doc;
+
+                const req = await app.fetchLogo(doc['Requested By']);
+
+                newObj[key].logo = req.logo;
+
+                app[key] = newObj[key]
+                app.$forceUpdate();
+
+            }
+
+        })
+
+        app.songs = newObj
+        app.$forceUpdate();
+
+        Vue.nextTick(() => {
+            $(".toast").toast({ autohide: false, delay: 9999999999999 });
+            $(".toast").toast("show");
+        })
+
+    })
+
+
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            fetchLogo: async (name) => {
+                return await fetch(`/logos/${name}`)
+                    .then(response => response.json())
+                    .then(data => data);
+            },
+            asyncForEach: async function (
+                array,
+                callback
+            ) {
+                for (let index = 0; index < array.length; index++) {
+                    await callback(array[index], index, array);
+                }
+            },
+            songs: [],
+            logos: [],
+            maxSongList: 5,
+            colors: ['primary', 'info', 'secondary', 'warning', 'success']
+        }
+    })
+
+
+
+
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+    crossorigin="anonymous"></script>
+
+
+</html>
