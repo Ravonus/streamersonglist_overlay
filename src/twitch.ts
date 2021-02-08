@@ -17,4 +17,5 @@ export const getClient = async (name: string) => apiClient;
 export const getLogo = async (name: string) =>
   await apiClient.kraken.users
     .getUserByName(name)
-    .then((user) => user?.logoUrl);
+    .then((user) => user?.logoUrl)
+    .catch((e) => {});
