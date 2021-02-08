@@ -34,21 +34,18 @@
 
                 </div>
                 <div class="toast-body">
-                    <div class="row">
+                    <div class="d-flex justify-content-between">
 
-                        <div class="col-sm">
-                            <img :src="song.logo"
-                                style="height: 75px; width: 75px; border: #eceaf1; border-style: solid; box-shadow: 2px 2px 20px 2px #000000a3;"
-                                class="rounded me-2" alt="img">
-                        </div>
-                        <div class="col-sm">
-                            <h3 style="text-overflow: ellipsis;
+                        <img :src="song.logo && song.logo !== 'https://static-cdn.jtvnw.net/user-default-pictures-uv/ead5c8b2-a4c9-4724-b1dd-9f00b46cbd3d-profile_image-300x300.png' ? song.logo  : `https://robohash.org/${song['Requested By']}?set=set4`"
+                            style="height: 75px; width: 75px; border: #eceaf1; border-style: solid; box-shadow: 2px 2px 20px 2px #000000a3;"
+                            class="rounded me-2" alt="img">
+
+                        <h3 style="text-overflow: ellipsis;
                             white-space: nowrap;
                             overflow: hidden;
                             width: 200px;">
-                                {{song["Requested By"]}}
-                            </h3>
-                        </div>
+                            {{song["Requested By"]}}
+                        </h3>
 
                         <h4 v-if="song.Amount !== '$0'"> {{song.Amount}} </h4>
                     </div>
@@ -66,21 +63,18 @@
 
                 </div>
                 <div class="toast-body">
-                    <div class="row">
+                    <div class="d-flex justify-content-between">
 
-                        <div class="col-sm">
-                            <img :src="song.logo && song.logo !== 'https://static-cdn.jtvnw.net/user-default-pictures-uv/ead5c8b2-a4c9-4724-b1dd-9f00b46cbd3d-profile_image-300x300.png' ? song.logo  : `https://robohash.org/${song['Requested By']}?set=set4`"
-                                style="height: 75px; width: 75px; border: #eceaf1; border-style: solid; box-shadow: 2px 2px 20px 2px #000000a3;"
-                                class="rounded me-2" alt="img">
-                        </div>
-                        <div class="col-sm">
-                            <h3 style="text-overflow: ellipsis;
+                        <img :src="song.logo && song.logo !== 'https://static-cdn.jtvnw.net/user-default-pictures-uv/ead5c8b2-a4c9-4724-b1dd-9f00b46cbd3d-profile_image-300x300.png' ? song.logo  : `https://robohash.org/${song['Requested By']}?set=set4`"
+                            style="height: 75px; width: 75px; border: #eceaf1; border-style: solid; box-shadow: 2px 2px 20px 2px #000000a3;"
+                            class="rounded me-2" alt="img">
+
+                        <h3 style="text-overflow: ellipsis;
                             white-space: nowrap;
                             overflow: hidden;
                             width: 200px;">
-                                {{song["Requested By"]}}
-                            </h3>
-                        </div>
+                            {{song["Requested By"]}}
+                        </h3>
 
                         <h4 v-if="song.Amount !== '$0'"> {{song.Amount}} </h4>
                     </div>
