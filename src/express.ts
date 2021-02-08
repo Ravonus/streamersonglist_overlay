@@ -1,10 +1,14 @@
 import express, { Response, Request } from "express";
 import path from "path";
 import { socketStart } from "./sockets";
+
 import { setLogoRoute } from "./routes/grabLogos";
+import { readConfig } from "./config";
+
+let conf = readConfig();
 
 const app = express();
-const port = 8080; // default port to listen
+const port = conf.port || 8080; // default port to listen
 
 let currentSongsList = {};
 let lastCurrentSongsList = {};
@@ -17,7 +21,7 @@ app.use(express.static(path.join(__dirname, "../", "public")));
 var http = require("http")
   .createServer(app)
   .listen(port, function () {
-    console.log("Express server listening on port " + app.get("port"));
+    console.log("Express server listening on port " + port);
   });
 
 // define a route handler for the default home page
