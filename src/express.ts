@@ -23,8 +23,8 @@ var http = require("http")
 // define a route handler for the default home page
 app.get("/", (req: Request, res: Response) => {
   // render the index template
-
-  res.render("index");
+  app.locals.currentSongsList = currentSongsList;
+  res.render("index", { currentSongsList });
 });
 
 const io = socketStart(http);
