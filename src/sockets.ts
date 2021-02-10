@@ -4,7 +4,9 @@ export function socketStart(http: socketio.Server) {
   let io = require("socket.io")(http);
 
   io.on("connection", function (socket: any) {
-    console.log("a user connected");
+    socket.on("join", (room: string) => {
+      socket.join(room);
+    });
   });
 
   return io;

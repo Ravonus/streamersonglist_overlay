@@ -4,13 +4,14 @@ import { socketStart } from "./sockets";
 
 import { setLogoRoute } from "./routes/grabLogos";
 import { readConfig } from "./config";
+import { OpenStreamerSongListPage } from "./browser";
 
 let conf = readConfig();
 
 const app = express();
 const port = conf.port || 8080; // default port to listen
 
-let currentSongsList = {};
+let currentSongsList: { [key: string]: {} } = {};
 let lastCurrentSongsList = {};
 
 // Configure Express to use EJS
@@ -25,21 +26,31 @@ var http = require("http")
   });
 
 // define a route handler for the default home page
-app.get("/", (req: Request, res: Response) => {
-  // render the index template
-  app.locals.currentSongsList = currentSongsList;
-  res.render("index", { currentSongsList });
+app.get("/", async (req: Request, res: Response) => {
+  const streamer = req.query.streamer || conf.streamer;
+  let songList: any = currentSongsList[streamer];
+
+  if (!songList) {
+    songList = await OpenStreamerSongListPage(streamer);
+  }
+
+  if (!app.locals.currentSongsList) app.locals.currentSongsList = {};
+
+  // app.locals.currentSongsList[streamer] = songList;
+  res.render("index", {
+    currentSongsList: songList[streamer] || songList,
+    room: streamer,
+  });
 });
 
 const io = socketStart(http);
 
 setLogoRoute(app);
 
-export function setSongList(list: {}) {
-  lastCurrentSongsList = currentSongsList;
-  currentSongsList = list;
+export function setSongList(list: {}, streamer: string) {
+  currentSongsList[streamer] = list;
 
-  io.of("/").emit("list", currentSongsList);
+  io.of("/").to(streamer).emit("list", list);
 }
 
 export function grabApp() {

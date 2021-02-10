@@ -6,9 +6,6 @@ const conf = readConfig();
 
 const clientId = conf.client_id;
 const clientSecret = conf.client_secret;
-
-console.log(clientId, clientSecret);
-
 const authProvider = new ClientCredentialsAuthProvider(clientId, clientSecret);
 const apiClient = new ApiClient({ authProvider });
 
