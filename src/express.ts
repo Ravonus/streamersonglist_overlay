@@ -28,6 +28,7 @@ var http = require("http")
 // define a route handler for the default home page
 app.get("/", async (req: Request, res: Response) => {
   const streamer = req.query.streamer || conf.streamer;
+  const maxSongList = Number(req.query.maxSongList);
   let songList: any = currentSongsList[streamer];
 
   if (!songList) {
@@ -36,9 +37,22 @@ app.get("/", async (req: Request, res: Response) => {
 
   if (!app.locals.currentSongsList) app.locals.currentSongsList = {};
 
+  songList = songList[streamer] || songList;
+
+  const newList: any = {};
+
+  if (maxSongList && typeof maxSongList === "number") {
+    const keys = Object.keys(songList);
+
+    keys.map((key, i) => {
+      const doc = songList[key];
+      if (i < maxSongList) newList[key] = doc;
+    });
+  }
+
   // app.locals.currentSongsList[streamer] = songList;
   res.render("index", {
-    currentSongsList: songList[streamer] || songList,
+    currentSongsList: Object.keys(newList).length > 0 ? newList : songList,
     room: streamer,
   });
 });

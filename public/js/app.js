@@ -1,6 +1,12 @@
 var app = new Vue({
   el: "#app",
   data: {
+    songs: [],
+    logos: [],
+    maxSongList: 10,
+    colors: ["primary", "info", "secondary", "warning", "success"],
+  },
+  methods: {
     fetchLogo: async (name) => {
       return await fetch(`/logos/${name}`)
         .then((response) => response.json())
@@ -44,6 +50,7 @@ var app = new Vue({
       return "";
     },
     pickTextColorBasedOnBgColorAdvanced: (bgColor, lightColor, darkColor) => {
+      if (!bgColor) return darkColor;
       var color = bgColor.charAt(0) === "#" ? bgColor.substring(1, 7) : bgColor;
       var r = parseInt(color.substring(0, 2), 16); // hexToR
       var g = parseInt(color.substring(2, 4), 16); // hexToG
@@ -71,9 +78,23 @@ var app = new Vue({
       return `#${f(0)}${f(8)}${f(4)}`;
     },
 
-    songs: [],
-    logos: [],
-    maxSongList: 10,
-    colors: ["primary", "info", "secondary", "warning", "success"],
+    getUrlQuery: () => {
+      var vars = [],
+        hash;
+      var hashes = window.location.href
+        .slice(window.location.href.indexOf("?") + 1)
+        .split("&");
+      for (var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split("=");
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+      }
+      return vars;
+    },
+  },
+  mounted() {
+    const query = this.getUrlQuery();
+    this.maxSongList = query.maxSongList ? query.maxSongList : 10;
+    this.$forceUpdate();
   },
 });
